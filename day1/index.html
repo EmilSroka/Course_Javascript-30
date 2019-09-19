@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JavaScript Drum Kit</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <article class="launchpad">
+        <button data-code="65" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>A</kbd>
+            <span>boom</span>
+        </button>
+        <button data-code="83" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>S</kbd>
+            <span>clap</span>
+        </button>
+        <button data-code="68" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>D</kbd>
+            <span>hihat</span>
+        </button>
+        <button data-code="70" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>F</kbd>
+            <span>kick</span>
+        </button>
+        <button data-code="71" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>G</kbd>
+            <span>openhat</span>
+        </button>
+        <button data-code="72" htype="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>H</kbd>
+            <span>ride</span>
+        </button>
+        <button data-code="74" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>J</kbd>
+            <span>snare</span>
+        </button>
+        <button data-code="75" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>K</kbd>
+            <span>tink</span>
+        </button>
+        <button data-code="76" type="button" aria-label="play sound" class="launchpad__btn">
+            <kbd>L</kbd>
+            <span>tom</span>
+        </button>
+        
+        <audio class="launchpad__audio" data-code="65" src="./sounds/boom.wav" >
+        <audio class="launchpad__audio" data-code="83" src="./sounds/clap.wav" >
+        <audio class="launchpad__audio" data-code="68" src="./sounds/hihat.wav" >
+        <audio class="launchpad__audio" data-code="70" src="./sounds/kick.wav" >
+        <audio class="launchpad__audio" data-code="71" src="./sounds/openhat.wav" >
+        <audio class="launchpad__audio" data-code="72" src="./sounds/ride.wav" >
+        <audio class="launchpad__audio" data-code="74" src="./sounds/snare.wav" >
+        <audio class="launchpad__audio" data-code="75" src="./sounds/tink.wav" >
+        <audio class="launchpad__audio" data-code="76" src="./sounds/tom.wav" >
+    </article>
+</body>
+</html>

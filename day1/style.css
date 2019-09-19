@@ -1,0 +1,49 @@
+*{
+    box-sizing: inherit;
+}
+
+body{
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.launchpad{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 140px);
+    grid-auto-rows: 140px;
+    grid-gap: 10px;
+    align-content: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 10px;
+    background: url("./imgs/background-426.jpg") 0 / cover;
+    
+}
+
+.launchpad__btn{
+    border: 3px solid white;
+    border-radius: 3px;
+    background: rgba(255,255,255,.4);
+    transition: all .07s ease;
+}
+
+.launchpad__btn kbd{
+    display: block;
+    font-size: 48px;
+}
+
+.launchpad__btn span{
+    font-size: 16px;
+}
+
+.launchpad__btn:hover,
+.launchpad__btn:focus{
+    background: rgba(255,255,255,.8);
+    outline: none;
+}
+
+.launchpad__btn:active,
+.launchpad__btn.active{
+    transform: scale(1.1);
+    box-shadow: 0 0 10px 10px rgba(255,255,255,.4);
+}
