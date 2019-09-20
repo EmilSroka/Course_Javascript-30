@@ -17,7 +17,6 @@ body{
     min-height: 100vh;
     padding: 10px;
     background: url("./imgs/background-426.jpg") 0 / cover;
-    
 }
 
 .launchpad__btn{
@@ -46,4 +45,16 @@ body{
 .launchpad__btn.active{
     transform: scale(1.1);
     box-shadow: 0 0 10px 10px rgba(255,255,255,.4);
+}
+
+@media screen and (min-width: 520px){
+    .launchpad{
+        background-image: url("./imgs/background-853.jpg");
+    }
+}
+
+@media screen and (min-width: 1200px){
+    .launchpad{
+        background-image: url("./imgs/background-1280.jpg");
+    }
 }
