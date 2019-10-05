@@ -1,0 +1,78 @@
+*{
+    box-sizing: inherit;
+}
+
+body{
+    box-sizing: border-box;
+    background-color: #0B0C10;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+mark{
+    background-color: #064744;
+    color: #72FEF4;
+    letter-spacing: 1px;
+}
+
+.search{
+    display: block;
+    max-width: 24rem;
+    padding: 12px 18px;
+    margin: 46px auto 0;
+    border: 1px solid transparent;
+    border-radius: 1px;
+    font-size: 36px;
+    background-color: #1F2833;
+    color: #C5C6c7;
+}
+
+
+.search:focus{
+    border-color: #064744;
+    outline: none;
+}
+
+.search:hover,
+.search:active{
+    border-color: #72FEF4;
+}
+
+.results{
+    list-style: none inside;
+    max-width: 24rem;
+    padding: 0;
+    margin: 0 auto;
+    background: #1F2833;
+    color: #C5C6c7;
+}
+
+.result{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 12px 18px;
+    border-top: 1px solid #131b25;
+    border-radius: 1px; 
+    font-size: 24px;
+}
+
+.city{
+    margin: 0;
+}
+
+.population{
+    margin: 0;
+    font-size: 16px;
+}
+
+/* https://gist.github.com/marcol/3979586 */
+.visually-hidden{
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px, 1px, 1px, 1px);
+    padding:0 !important;
+    border:0 !important;
+    height: 1px !important; 
+    width: 1px !important; 
+    overflow: hidden;
+}
