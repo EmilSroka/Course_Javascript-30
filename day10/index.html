@@ -83,8 +83,32 @@
   </div>
 
 <script>
+    let checkboxes = Array.from(document.querySelectorAll('.item input'));
+    let previous = undefined;
 
-    
+
+    document.querySelector('.inbox').addEventListener('click', function handle({target, shiftKey}){
+        if(event.target.tagName !== 'INPUT' || event.target.type !== 'checkbox'){ return; }
+        
+        if(previous && shiftKey){
+            let targetPosition = checkboxes.findIndex(checkbox => checkbox === target);
+            let previousPosition = checkboxes.findIndex(checkbox => checkbox === previous);
+            let greaterIndex = Math.max(targetPosition, previousPosition);
+            let lowerIndex = Math.min(targetPosition, previousPosition);
+
+            let between = checkboxes.slice(lowerIndex+1, greaterIndex);
+            if(between.length > 0){
+                between.forEach(function activate(checkbox){
+                    if(! checkbox.checked){
+                        checkbox.checked = true;
+                    }
+                });
+            }
+        }
+        previous = target;
+        
+    });
+
 </script>
 </body>
 </html>
