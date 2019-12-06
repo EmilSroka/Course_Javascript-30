@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="player">
+        <video class="player__video" src="652333414.mp4"></video>
+
+        <div class="player__menu">
+            <meter id="player-progress" class="visually-hidden"></meter>
+            <div class="menu__progress">
+                <div class="menu__progress__indicator"></div>
+            </div>
+
+            <button type="button" class="menu__status player__button" aria-label="Play"><span aria-hidden="true">▶</span></button>
+            <input type="range" class="menu__volume" min="0" max="100" value="50" id="player-volume" aria-label="Change volume">
+            <input type="range" class="menu__speed" min="25" max="200" value="100" id="player-speed" aria-label="Change play speed">
+            <button type="button" class="menu__skip player__button" aria-label="Skip ten seconds"><span aria-hidden="true">+10s</span></button>
+            <button type="button" class="menu__rewind player__button" aria-label="Rewind ten seconds"><span aria-hidden="true">-10s</span></button>
+        </div>
+    </div>
+</body>
+</html>
