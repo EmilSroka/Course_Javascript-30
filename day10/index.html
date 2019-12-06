@@ -6,11 +6,26 @@
   <style>
         html {
           font-family: sans-serif;
-          background: #ffc600;
+          background: #d9b226;
+        }
+        .info{
+          max-width: 450px;
+          background: white;
+          border: 0;
+          border-radius: 5px;
+          box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+          margin: 50px auto 0;
+        }
+        .info > code{
+          padding: 2px 5px;
+          background: #ffeeb3;
+          border-radius: 2px;
+          font-size: .9em;
+          color: #524000;
         }
         .inbox {
           max-width: 400px;
-          margin: 50px auto;
+          margin: 35px auto;
           background: white;
           border-radius: 5px;
           box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
@@ -43,6 +58,8 @@
     </style>
 </head>
 <body>
+  <h1></h1>
+  <p class="info">Use <code>shift + LMB</code> to select multiple checkboxes</p>
   <div class="inbox">
     <div class="item">
       <input type="checkbox">
