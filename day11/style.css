@@ -1,0 +1,216 @@
+body{
+    height: 100vh;
+    margin: 0;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: linear-gradient(to top right, hsl(209, 15%, 28%), hsl(207, 12%, 43%));
+}
+
+.player{
+    width: 80vw;
+    height: 45vw;
+    overflow: hidden;
+}
+
+.player__button{
+    width: 50px;
+    height: 50px;
+    background-color: #46b3e6; 
+    border-radius: 2px;
+    border: none;
+}
+
+.player__button:hover{
+    background-color: #68d5f8; 
+}
+
+.player__button:focus{
+    box-shadow: 0 0 0 1px #000000,
+                0 0 0 4px #454d4d;
+    outline: none;
+}
+
+.player__video{
+    width: 100%;
+    height: 100%;
+}
+
+.player__menu{
+    transition: transform .3s ease;
+}
+
+.player:hover .player__menu{
+    transform: translateY(-100%);
+}
+
+.player__menu{
+    padding: 0 5px;
+    display: grid;
+    grid-template-areas: 
+        "progress progress progress progress progress"
+        "play volume speed skip rewind";
+    grid-template-columns: auto 1fr 1fr auto auto;
+    grid-gap: 10px;
+}
+
+.menu__progress {
+    grid-area: progress;
+
+    width: 100%;
+    height: 25.6px;
+    cursor: pointer; /* TO DO*/
+    background: #454d4d;
+    border-radius: 2px;
+    position: relative;
+}
+.menu__progress__filled{
+    height: 100%;
+    border-radius: 2px;
+    background: #647070;
+    width: 50%;
+}
+.menu__progress__indicator {
+    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
+    border: 0px solid #4d80e4;
+    height: 31px;
+    width: 17px;
+    border-radius: 2px;
+    background: #46b3e6;
+    cursor: grab; /* ??? */
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -2.7px);
+}
+
+.menu__status{
+    grid-area: play;
+    position: relative;
+}
+
+.menu__status::after{
+    content: "▶";
+    font-size: 32px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}   
+
+.menu__volume{
+    grid-area: volume;
+}
+
+.menu__speed{
+    grid-area: speed;
+}
+
+.menu__skip{
+    grid-area: skip;
+}
+
+.menu__rewind{
+    grid-area: rewind;
+}
+
+/* */
+
+.visually-hidden { 
+    height: 1px; 
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    margin: 2.7px 0;
+    background: none;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 25.6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #454d4d;
+    border-radius: 2px;
+}
+input[type=range]::-webkit-slider-thumb {
+    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
+    border: 0px solid #4d80e4;
+    height: 31px;
+    width: 17px;
+    border-radius: 2px;
+    background: #46b3e6;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -2.7px;
+}
+input[type=range]:hover::-webkit-slider-thumb{
+    background: #68d5f8;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #94A0A0;
+}
+input[type=range]::-moz-range-track {
+    width: 100%;
+    height: 25.6px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    background: #454d4d;
+    border-radius: 2px;
+}
+input[type=range]::-moz-range-thumb {
+    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
+    border: 0px solid #4d80e4;
+    height: 31px;
+    width: 17px;
+    border-radius: 2px;
+    background: #46b3e6;
+    cursor: pointer;
+}
+input[type=range]:hover::-moz-range-thumb{
+    background: #68d5f8;
+}
+input[type=range]::-ms-track {
+    width: 100%;
+    height: 25.6px;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #262a2a;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+    background: #454d4d;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
+    border: 0px solid #4d80e4;
+    height: 31px;
+    width: 17px;
+    border-radius: 2px;
+    background: #46b3e6;
+    cursor: pointer;
+}
+input[type=range]:hover::-ms-thumb{
+    background: #68d5f8;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #454d4d;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #647070;
+}
