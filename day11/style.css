@@ -1,3 +1,7 @@
+* {
+    box-sizing: inherit;
+}
+
 body{
     height: 100vh;
     margin: 0;
@@ -7,12 +11,14 @@ body{
     align-items: center;
 
     background-image: linear-gradient(to top right, hsl(209, 15%, 28%), hsl(207, 12%, 43%));
+    box-sizing: border-box;
 }
 
 .player{
     width: 80vw;
     height: 45vw;
     overflow: hidden;
+    position: relative;
 }
 
 .player__button{
@@ -34,16 +40,28 @@ body{
 }
 
 .player__video{
+    position: absolute;
+    top: 0; left: 0;
     width: 100%;
     height: 100%;
 }
 
 .player__menu{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80vw;
     transition: transform .3s ease;
+    transform: translateY(120%);
 }
 
-.player:hover .player__menu{
-    transform: translateY(-100%);
+.show-menu .player__menu{
+    transition: none;
+}
+
+.player:hover .player__menu,
+.player.show-menu .player__menu{
+    transform: none;
 }
 
 .player__menu{
@@ -158,6 +176,7 @@ input[type=range]:hover::-webkit-slider-thumb{
 input[type=range]:focus::-webkit-slider-runnable-track {
     background: #94A0A0;
 }
+/* TO DO: add focus state */
 input[type=range]::-moz-range-track {
     width: 100%;
     height: 25.6px;
