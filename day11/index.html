@@ -11,15 +11,18 @@
         <video class="player__video" src="652333414.mp4"></video>
 
         <div class="player__menu">
-            <meter id="player-progress" class="visually-hidden"></meter>
-            <div class="menu__progress">
+            <div role="slider" id="video-time" tabindex="0" class="menu__progress" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
                 <div class="menu__progress__filled"></div>
                 <div class="menu__progress__indicator"></div>
             </div>
 
             <button type="button" class="menu__status player__button" aria-label="Play"></button>
-            <input type="range" class="menu__volume" min="0" max="100" value="50" id="player-volume" aria-label="Change volume">
-            <input type="range" class="menu__speed" min="25" max="200" value="100" id="player-speed" aria-label="Change play speed">
+            <div role="slider" id="player-volume" tabindex="0" class="menu__progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Change volume">
+                <div class="menu__progress__indicator"></div>
+            </div>
+            <div role="slider" id="player-speed" tabindex="0" class="menu__progress" aria-valuemin="25" aria-valuemax="200" aria-valuenow="100" aria-label="Change play speed">
+                <div class="menu__progress__indicator"></div>
+            </div>
             <button type="button" class="menu__skip player__button" aria-label="Skip ten seconds"><span aria-hidden="true">+10s</span></button>
             <button type="button" class="menu__rewind player__button" aria-label="Rewind ten seconds"><span aria-hidden="true">-10s</span></button>
         </div>

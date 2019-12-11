@@ -1,3 +1,5 @@
+/* generic */
+
 * {
     box-sizing: inherit;
 }
@@ -14,12 +16,18 @@ body{
     box-sizing: border-box;
 }
 
+
+/* player */
+
 .player{
     width: 80vw;
     height: 45vw;
     overflow: hidden;
     position: relative;
 }
+
+
+/* player - button */
 
 .player__button{
     width: 50px;
@@ -31,13 +39,65 @@ body{
 
 .player__button:hover{
     background-color: #68d5f8; 
+    cursor: pointer;
 }
 
 .player__button:focus{
-    box-shadow: 0 0 0 1px #000000,
-                0 0 0 4px #454d4d;
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #46b3e6;
     outline: none;
 }
+.player__button::-moz-focus-inner {
+    border:0;
+}
+
+.player__button:focus:hover{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #68d5f8;
+}
+
+
+/* player - slider */
+
+.menu__progress {
+    width: 100%;
+    height: 25.6px;
+    background: #454d4d;
+    border-radius: 2px;
+    position: relative;
+}
+.menu__progress__filled {
+    height: 100%;
+    border-radius: 2px;
+    background: #647070;
+    width: 50%;
+}
+.menu__progress__indicator {
+    height: 31px;
+    width: 17px;
+    border-radius: 2px;
+    background: #46b3e6;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -2.7px);
+}
+.menu__progress:focus{
+    outline: none;
+}
+
+.menu__progress:focus .menu__progress__indicator{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #46b3e6;
+}
+.menu__progress:focus .menu__progress__indicator:hover{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #68d5f8;
+}
+
+
+/* player - layout */
 
 .player__video{
     position: absolute;
@@ -61,7 +121,7 @@ body{
 
 .player:hover .player__menu,
 .player.show-menu .player__menu{
-    transform: none;
+    transform: translateY(-10%);
 }
 
 .player__menu{
@@ -72,56 +132,18 @@ body{
         "play volume speed skip rewind";
     grid-template-columns: auto 1fr 1fr auto auto;
     grid-gap: 10px;
+    align-items: center;
 }
 
-.menu__progress {
+#video-time{
     grid-area: progress;
-
-    width: 100%;
-    height: 25.6px;
-    cursor: pointer; /* TO DO*/
-    background: #454d4d;
-    border-radius: 2px;
-    position: relative;
-}
-.menu__progress__filled{
-    height: 100%;
-    border-radius: 2px;
-    background: #647070;
-    width: 50%;
-}
-.menu__progress__indicator {
-    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
-    border: 0px solid #4d80e4;
-    height: 31px;
-    width: 17px;
-    border-radius: 2px;
-    background: #46b3e6;
-    cursor: grab; /* ??? */
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -2.7px);
 }
 
-.menu__status{
-    grid-area: play;
-    position: relative;
-}
-
-.menu__status::after{
-    content: "▶";
-    font-size: 32px;
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-}   
-
-.menu__volume{
+#player-volume{
     grid-area: volume;
 }
 
-.menu__speed{
+#player-speed{
     grid-area: speed;
 }
 
@@ -133,103 +155,16 @@ body{
     grid-area: rewind;
 }
 
-/* */
-
-.visually-hidden { 
-    height: 1px; 
-    width: 1px;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
+.menu__status{
+    grid-area: play;
+    position: relative;
 }
 
-input[type=range] {
-    -webkit-appearance: none;
-    width: 100%;
-    margin: 2.7px 0;
-    background: none;
-}
-input[type=range]:focus {
-    outline: none;
-}
-input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 25.6px;
-    cursor: pointer;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-    background: #454d4d;
-    border-radius: 2px;
-}
-input[type=range]::-webkit-slider-thumb {
-    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
-    border: 0px solid #4d80e4;
-    height: 31px;
-    width: 17px;
-    border-radius: 2px;
-    background: #46b3e6;
-    cursor: pointer;
-    -webkit-appearance: none;
-    margin-top: -2.7px;
-}
-input[type=range]:hover::-webkit-slider-thumb{
-    background: #68d5f8;
-}
-input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #94A0A0;
-}
-/* TO DO: add focus state */
-input[type=range]::-moz-range-track {
-    width: 100%;
-    height: 25.6px;
-    cursor: pointer;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-    background: #454d4d;
-    border-radius: 2px;
-}
-input[type=range]::-moz-range-thumb {
-    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
-    border: 0px solid #4d80e4;
-    height: 31px;
-    width: 17px;
-    border-radius: 2px;
-    background: #46b3e6;
-    cursor: pointer;
-}
-input[type=range]:hover::-moz-range-thumb{
-    background: #68d5f8;
-}
-input[type=range]::-ms-track {
-    width: 100%;
-    height: 25.6px;
-    cursor: pointer;
-    background: transparent;
-    border-color: transparent;
-    color: transparent;
-}
-input[type=range]::-ms-fill-lower {
-    background: #262a2a;
-    border-radius: 2px;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-fill-upper {
-    background: #454d4d;
-    border-radius: 2px;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-input[type=range]::-ms-thumb {
-    box-shadow: 0px 0px 1px #2e279d, 0px 0px 0px #1e178d;
-    border: 0px solid #4d80e4;
-    height: 31px;
-    width: 17px;
-    border-radius: 2px;
-    background: #46b3e6;
-    cursor: pointer;
-}
-input[type=range]:hover::-ms-thumb{
-    background: #68d5f8;
-}
-input[type=range]:focus::-ms-fill-lower {
-    background: #454d4d;
-}
-input[type=range]:focus::-ms-fill-upper {
-    background: #647070;
-}
+.menu__status::after{
+    content: url("play-solid.svg");
+    position: absolute;
+    top: 50%; left: 55%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+}   
