@@ -64,6 +64,7 @@ function ButtonUI(selector) {
 function SliderUI(selector) {
     /* fields */
     let subscribers = [];
+    let step = 1;
     let DOM = document.querySelector(selector);
     let indicator = document.querySelector(`${selector} .menu__progress__indicator`);
     let filled = document.querySelector(`${selector} .menu__progress__filled`);
@@ -77,7 +78,9 @@ function SliderUI(selector) {
     });
     /* public API */
     return {
-        subscribe, updateValue, updateMaxValue, updateMinValue
+        subscribe, 
+        updateValue, translateValue, increaseValue, decreaseValue, updateMaxValue, updateMinValue,
+        setStep
     };
     /* methods */
     function updateValue(newValue) {
@@ -85,10 +88,33 @@ function SliderUI(selector) {
 
         value = newValue;
         DOM.setAttribute('aria-valuenow', value);
-        updatePosition();
+        updateIndicatorPosition();
         
         function isNotCorrect(newValue) {
             return newValue > maxValue || newValue < minValue;
+        }
+    }
+    function translateValue(step) { /* increase or decrease */
+        if(Math.sign(step) > 0) {
+            increaseValue(step);
+        } else {
+            decreaseValue(-step);
+        }
+    }
+    function increaseValue(step) {
+        if(value < 0) return;
+        if(value + step < maxValue) {
+            updateValue(value + step);
+        } else { 
+            updateValue(maxValue); 
+        }
+    }
+    function decreaseValue(step) {
+        if(value < 0) return;
+        if(value - step > minValue) {
+            updateValue(value - step);
+        } else { 
+            updateValue(minValue); 
         }
     }
     function updateMaxValue(newMaxValue) {
@@ -96,7 +122,7 @@ function SliderUI(selector) {
 
         maxValue = newMaxValue;
         DOM.setAttribute('aria-valuemax', maxValue);
-        updatePosition();
+        updateIndicatorPosition();
         
         function isNotCorrect(newMaxValue) {
             return newMaxValue < value || newMaxValue < minValue;
@@ -107,38 +133,73 @@ function SliderUI(selector) {
 
         minValue = newMinValue;
         DOM.setAttribute('aria-valuemin', minValue);
-        updatePosition();
+        updateIndicatorPosition();
         
         function isNotCorrect(newMinValue) {
             return newMinValue > value || newMinValue > maxValue;
         }
     }
-    function subscribe(fn) {
-        if(typeof fn !== 'function') return;
-
-        subscribers.push(fn);
-    } 
+    function setStep(newStep){
+        step = newStep;
+    }
     /* private methods */
-    function updatePosition(){
-        let positionInPercent = calculatePosition();
+    function handleKeyboardNavigation(event) {
+        let hasValueChanged = true;
+
+        switch (event.key) {
+            case 'ArrowLeft':
+            case 'ArrowDown':
+                decreaseValue(step);
+                break;
+            case 'ArrowRight':
+            case 'ArrowUp':
+                increaseValue(step);
+                break;
+            case 'Home':
+                updateValue(minValue);
+                break;
+            case 'End':
+                updateValue(maxValue);
+                break;
+            default:
+                hasValueChanged = false;
+                break;
+        }
+        if(hasValueChanged) {
+            notifySubscribers();
+        }
+    }
+    function notifySubscribers(){
+        subscribers.forEach( subscriber => subscriber(minValue, value, maxValue) );
+    }
+    function updateIndicatorPosition(){
+        let position = calculatePosition();
+        position = toPercentages(position);
+        position = toString(position);
         
         if(indicator){
-            indicator.style.setProperty('left', positionInPercent);
+            indicator.style.setProperty('left', position);
         }
         if(filled) {
-            filled.style.setProperty('width', positionInPercent);
+            filled.style.setProperty('width', position);
         }
 
         function  calculatePosition() { 
-            let width, fromLeft, position, inPrecent, asString, withPercentSign;
-            width = maxValue - minValue;
-            fromLeft = value - minValue;
-            position = (fromLeft / width);
-            inPrecent =  position * 100;
-            asString = inPrecent.toFixed(2);
-            withPercentSign = `${asString}%`;
-            return withPercentSign;
+            let range = maxValue - minValue;
+            let fixedValue = value - minValue;
+            let position = (fixedValue / range);
+            return position;
         }
 
-    }
+        function toPercentages(number) {
+            return number * 100;
+        }
+
+        function toString(number) {
+            let asString = number.toFixed(2);
+            return `${asString}%`;
+        }
+    } 
 }
+
+var x = PlayerView(selectors.container);

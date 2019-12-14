@@ -74,7 +74,7 @@ body{
 }
 .menu__progress__indicator {
     height: 31px;
-    width: 17px;
+    width: 10px;
     border-radius: 2px;
     background: #46b3e6;
     cursor: pointer;
@@ -83,6 +83,12 @@ body{
     left: 50%;
     transform: translate(-50%, -2.7px);
 }
+
+.menu__progress__indicator:hover{
+    background-color: #68d5f8;
+}
+
+
 .menu__progress:focus{
     outline: none;
 }
