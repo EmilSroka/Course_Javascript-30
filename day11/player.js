@@ -63,19 +63,53 @@ function ButtonUI(selector) {
 
 function SliderUI(selector) {
     /* fields */
+    /* refactor fields */
     let subscribers = [];
     let step = 1;
     let DOM = document.querySelector(selector);
+    let width = DOM.getBoundingClientRect().width;
     let indicator = document.querySelector(`${selector} .menu__progress__indicator`);
     let filled = document.querySelector(`${selector} .menu__progress__filled`);
-    let minValue = DOM.getAttribute('aria-valuemin');
-    let maxValue = DOM.getAttribute('aria-valuemax');
-    let value = DOM.getAttribute('aria-valuenow');
+    let minValue = Number( DOM.getAttribute('aria-valuemin') );
+    let maxValue = Number( DOM.getAttribute('aria-valuemax') );
+    let value = Number( DOM.getAttribute('aria-valuenow') );
+    let range = maxValue - minValue;
+    
+    let drag = {
+        previousPosition: 0,
+        inProgress: false,
+        deltaTimeEnd: true,
+        deltaTime: 50
+    }
 
     /* constructor */
-    DOM.addEventListener('click', function notifySubscribers (){
-        subscribers.forEach( subscriber => subscriber() );
+    DOM.addEventListener('keydown', handleKeyboardNavigation);
+    indicator.addEventListener('mousedown', function(e) {
+        e.preventDefault();
+        drag.inProgress = true;
+        drag.previousPosition = e.screenX;
     });
+    document.addEventListener('mousemove', function(e) { // mouseover mousemove
+        if(drag.deltaTimeEnd && drag.inProgress) {
+            let deltaPosition = e.screenX - drag.previousPosition;
+            drag.previousPosition = e.screenX;
+            let deltaValue = (deltaPosition / width) * range;
+            translateValue(deltaValue);
+            drag.abled = false;
+            setInterval( () => drag.abled = true, drag.deltaTime);
+        }
+    });
+    document.addEventListener('mouseup', function(e) {
+        if(drag.inProgress) {
+            // TO DO: add class show-menu to menu ?
+            drag.inProgress = false;
+        }
+        
+    });
+    //DOM.addEventListener('mouseleave', function(e) {
+    //    console.log("END 2");
+    //    drag.inProgress = false;
+    //})
     /* public API */
     return {
         subscribe, 
@@ -83,6 +117,11 @@ function SliderUI(selector) {
         setStep
     };
     /* methods */
+    function subscribe(fn) { /* notify only when user change value */
+        if(typeof fn !== 'function') return;
+
+        subscribers.push(fn);
+    }
     function updateValue(newValue) {
         if(isNotCorrect(newValue)) return;
 
@@ -185,7 +224,6 @@ function SliderUI(selector) {
         }
 
         function  calculatePosition() { 
-            let range = maxValue - minValue;
             let fixedValue = value - minValue;
             let position = (fixedValue / range);
             return position;
