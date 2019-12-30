@@ -64,6 +64,39 @@ function ButtonUI(selector) {
     }    
 }
 
+function toggleUI(selector, classOnActive) {
+    /* fields */
+    let subscribers = [];
+    let button = document.querySelector(selector);
+    let state = 0; // 0 or 1
+    /* constructor */
+    button.addEventListener('click', function notifySubscribers (){
+        state = !state;
+        button.classList.toggle(classOnActive);  
+        subscribers.forEach( ({subscriber}) => subscriber(state) );
+    });
+    /* public API */
+    return { 
+        subscribe, setState 
+    };
+    /* methods */
+    function subscribe(fn, state) {
+        if(typeof fn !== 'function') return;
+        if(state !== 1 && state !== 0) return;
+
+        subscribers.push([fn, state]);
+    }
+    function setState(newState){
+        if(state !== 1 && state !== 0) return;
+
+        state = newState;
+        if(state){
+            button.remove(classOnActive);
+        } else {
+            button.add(classOnActive);
+        }
+    }
+}
 
 function SliderUI(selector) {
     /* fields */
