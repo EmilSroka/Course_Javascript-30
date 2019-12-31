@@ -61,7 +61,7 @@ function ButtonUI(selector) {
         if(typeof fn !== 'function') return;
 
         subscribers.push(fn);
-    }    
+    }
 }
 
 function toggleUI(selector, classOnActive) {
@@ -168,6 +168,7 @@ function SliderUI(selector) {
 
         maxValue = newMaxValue;
         slider.setAttribute('aria-valuemax', maxValue);
+        range = maxValue - minValue;
         updateIndicatorPosition();
         
         function isNotCorrect(newMaxValue) {
@@ -179,6 +180,7 @@ function SliderUI(selector) {
 
         minValue = newMinValue;
         slider.setAttribute('aria-valuemin', minValue);
+        range = maxValue - minValue;
         updateIndicatorPosition();
         
         function isNotCorrect(newMinValue) {
@@ -265,7 +267,7 @@ function SliderUI(selector) {
         }
     }
     function notifySubscribers(){
-        subscribers.forEach( subscriber => subscriber(minValue, value, maxValue) );
+        subscribers.forEach( subscriber => subscriber(value, minValue, maxValue) );
     }
     function updateIndicatorPosition(){
         let position = calculatePosition();

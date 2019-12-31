@@ -77,7 +77,6 @@ body{
     width: 10px;
     border-radius: 2px;
     background: #46b3e6;
-    cursor: pointer;
     position: absolute;
     top: 0;
     left: 50%;
@@ -174,3 +173,7 @@ body{
     width: 32px;
     height: 32px;
 }   
+
+.menu__status.active::after{
+    content: url("pause-solid.svg");
+} 
