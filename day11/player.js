@@ -18,18 +18,67 @@ const selectors = {
     allTabbableElements: 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable], audio[controls], video[controls], summary, [tabindex^="0"], [tabindex^="1"], [tabindex^="2"], [tabindex^="3"], [tabindex^="4"], [tabindex^="5"], [tabindex^="6"], [tabindex^="7"], [tabindex^="8"], [tabindex^="9"]'
 }
 
-/* View */
 
-function PlayerView(containerSelector) {
+/* View */
+function Player(containerSelector) {
     /* fields */
     const container = document.querySelector(containerSelector);
     const tabbable = Array.from( document.querySelectorAll(selectors.allTabbableElements) );
+    const progressBar = SliderUI(selectors.videoTime);
+    const playerBtn = toggleUI(selectors.playBtn, 'active');
+    const volumeSlider = SliderUI(selectors.volume);
+    const speedSlider = SliderUI(selectors.speed);
+    const skipBtn = ButtonUI(selectors.skipBtn);
+    const rewindBtn = ButtonUI(selectors.rewindBtn);
+
+    const video = Video(selectors.video);
+
     /* constructor */
     container.addEventListener('focusin', handleMenuVisibility, {useCapute: true});
     container.addEventListener('focusout', handleMenuVisibility, {useCapute: true});
+    video.getInfo().then( () => {
+        setVideoDetails();
+        // stop loader animation;
+    })
+    .catch( () => {
+        // display error;
+    })
 
-    return {};
-    /* methods */
+    progressBar.subscribe((value)=>{
+        video.setTime(value);
+    });
+
+    volumeSlider.subscribe((value)=>{
+        video.setVolume(value);
+    })
+
+    speedSlider.subscribe((value)=>{
+        video.setPlaybackRate(value);
+    })
+
+    skipBtn.subscribe( () => {
+        progressBar.increaseValue(10);
+        video.setTime(video.getTime() + 10);
+        
+    });
+
+    rewindBtn.subscribe(() => {
+        progressBar.decreaseValue(10);
+        video.setTime(video.getTime() - 10);
+    });
+
+    playerBtn.subscribe(() => video.play(), 'enabled');
+
+    playerBtn.subscribe(() => video.pause(), 'disabled');
+
+    window.addEventListener('resize', () => {
+        progressBar.updateWidth();
+        volumeSlider.updateWidth();
+        speedSlider.updateWidth();
+    });
+
+
+    /* private methods */
     function handleMenuVisibility({target, type}){
         // *** Is there a better solution ? *** //
         if(type === 'focusin'){
@@ -39,6 +88,31 @@ function PlayerView(containerSelector) {
         } else if(type === 'focusout'){
             container.classList.remove('show-menu');
         }
+    }
+
+    function setVideoDetails(options){
+        let defaultSettings = {
+            startTime: 0, endTime: 60, currentTime: 0, videoStep: 10,
+            minSpeed: 0.25, maxSpeed: 2, currentSpeed: 1, speedStep: 0.25,
+            minVolume: 0, maxVolume: 1, currentVolume: 0.25, volumeStep: 0.1
+        };
+
+        let settings = {...defaultSettings, ...options};
+
+        progressBar.updateMinValue(settings.startTime);
+        progressBar.updateValue(settings.currentTime);
+        progressBar.updateMaxValue(settings.endTime);
+        progressBar.setStep(settings.videoStep);
+
+        volumeSlider.updateMinValue(settings.minVolume);
+        volumeSlider.updateValue(settings.currentVolume);
+        volumeSlider.updateMaxValue(settings.maxVolume);
+        volumeSlider.setStep(settings.volumeStep);
+
+        speedSlider.updateMinValue(settings.minSpeed);
+        speedSlider.updateValue(settings.currentSpeed);
+        speedSlider.updateMaxValue(settings.maxSpeed);
+        speedSlider.setStep(settings.speedStep);        
     }
 }
 
@@ -68,12 +142,13 @@ function toggleUI(selector, classOnActive) {
     /* fields */
     let subscribers = [];
     let button = document.querySelector(selector);
-    let state = 0; // 0 or 1
+    let state = 'disabled'; // 0 or 1
     /* constructor */
     button.addEventListener('click', function notifySubscribers (){
-        state = !state;
+        state = (state === 'disabled') ? 'enabled' : 'disabled';
         button.classList.toggle(classOnActive);  
-        subscribers.forEach( ({subscriber}) => subscriber(state) );
+        toNotify = subscribers.filter( ([subscriber, targetedState]) =>  targetedState === state );
+        toNotify.forEach( ([subscriber]) => subscriber() )
     });
     /* public API */
     return { 
@@ -82,15 +157,15 @@ function toggleUI(selector, classOnActive) {
     /* methods */
     function subscribe(fn, state) {
         if(typeof fn !== 'function') return;
-        if(state !== 1 && state !== 0) return;
+        if(state !== 'disabled' && state !== 'enabled') return;
 
         subscribers.push([fn, state]);
     }
     function setState(newState){
-        if(state !== 1 && state !== 0) return;
+        if(state !== 'disabled' && state !== 'enabled') return;
 
         state = newState;
-        if(state){
+        if(state === 'disabled'){
             button.remove(classOnActive);
         } else {
             button.add(classOnActive);
@@ -121,7 +196,7 @@ function SliderUI(selector) {
     return {
         subscribe, 
         updateValue, translateValue, increaseValue, decreaseValue, updateMaxValue, updateMinValue,
-        setStep
+        setStep, updateWidth
     };
     /* methods */
     function subscribe(fn) { /* notify only when user change value */
@@ -189,6 +264,9 @@ function SliderUI(selector) {
     }
     function setStep(newStep){
         step = newStep;
+    }
+    function updateWidth(){
+        width = slider.getBoundingClientRect().width;
     }
     /* private methods */
     function setDefaultValues() {
@@ -298,4 +376,66 @@ function SliderUI(selector) {
     } 
 }
 
-var x = PlayerView(selectors.container);
+function Video(selector) {
+    let vid = document.querySelector(selector);
+    return { 
+        getInfo, 
+        setTime, setVolume, setPlaybackRate,
+        getTime,
+        play, pause
+    };
+
+    function getInfo(){
+        return new Promise(function(resolve, reject) {
+            let counter = 0;
+            let intervalTime = 100;
+
+            let interval = setInterval(() => {
+                if(Number.isNaN(vid.duration)){
+                    counter ++;
+                    if(counter > 30){
+                        clearInterval(interval); 
+                        reject(`Time out: ${intervalTime * counter}s`);     
+                    }
+                } else {
+                    resolve({
+                        endTime: vid.duration, 
+                        currentTime: vid.currentTime,
+                        currentVolume: vid.volume, 
+                    });
+
+                }
+            }, intervalTime);
+        });
+    }
+
+    function getTime(){
+        return vid.currentTime;
+    }
+
+    function setTime(time){
+        if(time > vid.duration || time < 0) return;
+
+        vid.currentTime = time;
+    }
+
+    function setVolume(vol){
+        if(vol > 1 || vol < 0) return;
+
+        vid.volume = vol;
+    }
+
+    function setPlaybackRate(ratio){
+        vid.playbackRate = ratio;
+    }
+
+    function play() {
+        vid.play();
+    }
+
+    function pause() {
+        vid.pause();
+    }
+}
+
+var x = Player(selectors.container);
