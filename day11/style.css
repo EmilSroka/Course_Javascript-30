@@ -1,0 +1,222 @@
+/* generic */
+
+* {
+    box-sizing: inherit;
+}
+
+body{
+    height: 100vh;
+    margin: 0;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-image: linear-gradient(to top right, hsl(209, 15%, 28%), hsl(207, 12%, 43%));
+    box-sizing: border-box;
+}
+
+
+/* player */
+
+.player{
+    width: 80vw;
+    height: 45vw;
+    overflow: hidden;
+    position: relative;
+}
+
+
+/* player - button */
+
+.player__button{
+    width: 50px;
+    height: 50px;
+    background-color: #46b3e6; 
+    border-radius: 2px;
+    border: none;
+}
+
+.player__button:hover{
+    background-color: #68d5f8; 
+    cursor: pointer;
+}
+
+.player__button:focus{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #46b3e6;
+    outline: none;
+}
+.player__button::-moz-focus-inner {
+    border:0;
+}
+
+.player__button:focus:hover{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #68d5f8;
+}
+
+
+/* player - slider */
+
+.menu__progress {
+    width: 100%;
+    height: 25.6px;
+    background: #454d4d;
+    border-radius: 2px;
+    position: relative;
+}
+.menu__progress__filled {
+    height: 100%;
+    border-radius: 2px;
+    background: #647070;
+    width: 50%;
+}
+.menu__progress__indicator {
+    height: 31px;
+    width: 10px;
+    border-radius: 2px;
+    background: #46b3e6;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -2.7px);
+}
+
+.menu__progress__indicator:hover{
+    background-color: #68d5f8;
+}
+
+
+.menu__progress:focus{
+    outline: none;
+}
+
+.menu__progress:focus .menu__progress__indicator{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #46b3e6;
+}
+.menu__progress:focus .menu__progress__indicator:hover{
+    box-shadow: 0 0 0 2px #000000,
+                0 0 0 4px #68d5f8;
+}
+
+
+/* player - layout */
+
+.player__video{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.player__menu{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 80vw;
+    transition: transform .3s ease;
+    transform: translateY(120%);
+}
+
+.show-menu .player__menu{
+    transition: none;
+}
+
+.player:hover .player__menu,
+.player.show-menu .player__menu{
+    transform: translateY(-10%);
+}
+
+.player__menu{
+    padding: 0 5px;
+    display: grid;
+    grid-template-areas: 
+        "progress progress progress progress progress"
+        "play volume speed skip rewind";
+    grid-template-columns: auto 1fr 1fr auto auto;
+    grid-gap: 10px;
+    align-items: center;
+}
+
+#video-time{
+    grid-area: progress;
+}
+
+#player-volume{
+    grid-area: volume;
+}
+
+#player-speed{
+    grid-area: speed;
+}
+
+.menu__skip{
+    grid-area: skip;
+}
+
+.menu__rewind{
+    grid-area: rewind;
+}
+
+.menu__status{
+    grid-area: play;
+    position: relative;
+}
+
+.menu__status::after{
+    content: url("play-solid.svg");
+    position: absolute;
+    top: 50%; left: 55%;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+}   
+
+.menu__status.active::after{
+    content: url("pause-solid.svg");
+} 
+
+/* loader */
+
+.player__loader{
+    position: relative;
+    width: 80vw;
+    height: 45vw;
+    background-color: #000000;
+}
+
+.player__loader.hide{
+    display: none;
+}
+
+.player__loader::after{
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    content: url("spinner-solid.svg");
+    width: 10vw;
+    height: 10vw;
+    animation: spin 1.5s ease-in-out .5s infinite normal backwards;
+}
+
+.player__loader.error::after{
+    animation: none;
+    transform: translate(-50%, -50%);
+    content: 'Error';
+    font-size: 2rem;
+    color: #68d5f8;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 10vw;
+}
+
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(315deg);
+    }
+}

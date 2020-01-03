@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <div class="player">
+        <video class="player__video" src="652333414.mp4"></video>
+
+        <div class="player__menu">
+            <div role="slider" id="video-time" tabindex="0" draggable="false" class="menu__progress" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0.5">
+                <div class="menu__progress__filled"></div>
+                <div class="menu__progress__indicator"></div>
+            </div>
+
+            <button type="button" class="menu__status player__button" aria-label="Play"></button>
+            <div role="slider" id="player-volume" tabindex="0" class="menu__progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Change volume">
+                <div class="menu__progress__indicator"></div>
+            </div>
+            <div role="slider" id="player-speed" tabindex="0" class="menu__progress" aria-valuemin="25" aria-valuemax="200" aria-valuenow="100" aria-label="Change playback rate">
+                <div class="menu__progress__indicator"></div>
+            </div>
+            <button type="button" class="menu__skip player__button" aria-label="Skip ten seconds"><span aria-hidden="true">+10s</span></button>
+            <button type="button" class="menu__rewind player__button" aria-label="Rewind ten seconds"><span aria-hidden="true">-10s</span></button>
+        </div>
+
+        <div class="player__loader"></div>
+    </div>
+
+    <script src="player.js"></script>
+</body>
+</html>
