@@ -4,6 +4,7 @@ const selectors = {
     container: '.player',
     video: '.player__video',
     menu: '.player__menu',
+    backdrop: '.player__loader',
     progress: '.menu__progress',
     progressIndicator: '.menu__progress__indicator',
     progressFilled: '.menu__progress__filled',
@@ -18,14 +19,13 @@ const selectors = {
     allTabbableElements: 'a[href], area[href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex="0"], [contenteditable], audio[controls], video[controls], summary, [tabindex^="0"], [tabindex^="1"], [tabindex^="2"], [tabindex^="3"], [tabindex^="4"], [tabindex^="5"], [tabindex^="6"], [tabindex^="7"], [tabindex^="8"], [tabindex^="9"]'
 }
 
-
 /* View */
 function Player(containerSelector) {
     /* fields */
-    const container = document.querySelector(containerSelector);
-    const tabbable = Array.from( document.querySelectorAll(selectors.allTabbableElements) );
+    const a11y = AccessibilityHandler(containerSelector);
+    const loader = Backdrop(`${containerSelector} ${selectors.backdrop}`);
     const progressBar = SliderUI(selectors.videoTime);
-    const playerBtn = toggleUI(selectors.playBtn, 'active');
+    const playerBtn = ToggleUI(selectors.playBtn, 'active');
     const volumeSlider = SliderUI(selectors.volume);
     const speedSlider = SliderUI(selectors.speed);
     const skipBtn = ButtonUI(selectors.skipBtn);
@@ -34,14 +34,15 @@ function Player(containerSelector) {
     const video = Video(selectors.video);
 
     /* constructor */
-    container.addEventListener('focusin', handleMenuVisibility, {useCapute: true});
-    container.addEventListener('focusout', handleMenuVisibility, {useCapute: true});
-    video.getInfo().then( () => {
-        setVideoDetails();
-        // stop loader animation;
+    a11y.hide();
+
+    video.getInfo().then( (info) => {
+        setVideoDetails(info);
+        a11y.show();
+        loader.hide();
     })
     .catch( () => {
-        // display error;
+        loader.displayError();
     })
 
     progressBar.subscribe((value)=>{
@@ -79,17 +80,6 @@ function Player(containerSelector) {
 
 
     /* private methods */
-    function handleMenuVisibility({target, type}){
-        // *** Is there a better solution ? *** //
-        if(type === 'focusin'){
-            if(tabbable.includes(target)){
-                container.classList.add('show-menu');
-            }
-        } else if(type === 'focusout'){
-            container.classList.remove('show-menu');
-        }
-    }
-
     function setVideoDetails(options){
         let defaultSettings = {
             startTime: 0, endTime: 60, currentTime: 0, videoStep: 10,
@@ -138,7 +128,7 @@ function ButtonUI(selector) {
     }
 }
 
-function toggleUI(selector, classOnActive) {
+function ToggleUI(selector, classOnActive) {
     /* fields */
     let subscribers = [];
     let button = document.querySelector(selector);
@@ -435,6 +425,54 @@ function Video(selector) {
 
     function pause() {
         vid.pause();
+    }
+}
+
+function AccessibilityHandler(selector){
+    const container = document.querySelector(selector);
+    const menu = container.querySelector(selectors.menu);
+    const tabbable = Array.from( container.querySelectorAll(selectors.allTabbableElements) );
+
+    container.addEventListener('focusin', handleExpansibility, {useCapute: true});
+    container.addEventListener('focusout', handleExpansibility, {useCapute: true});
+
+    return {
+        hide, show
+    };
+
+    function handleExpansibility({target, type}){
+        // *** Is there a better solution ? *** //
+        if(type === 'focusin'){
+            if(tabbable.includes(target)){
+                container.classList.add('show-menu');
+            }
+        } else if(type === 'focusout'){
+            container.classList.remove('show-menu');
+        }
+    }
+
+    function hide(){
+        menu.classList.add('hide');
+    }
+
+    function show(){
+        menu.classList.remove('hide');
+    }
+}
+
+function Backdrop(selector){
+    const container = document.querySelector(selector);
+
+    return {
+        displayError, hide
+    }
+
+    function displayError(){
+        container.classList.add('error');
+    }
+
+    function hide() {
+        container.classList.add('hide');
     }
 }
 
