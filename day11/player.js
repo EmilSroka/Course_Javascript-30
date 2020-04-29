@@ -33,6 +33,8 @@ function Player(containerSelector) {
 
     const video = Video(selectors.video);
 
+    let progressBarIntervalID;
+
     /* constructor */
     a11y.hide();
 
@@ -60,7 +62,6 @@ function Player(containerSelector) {
     skipBtn.subscribe( () => {
         progressBar.increaseValue(10);
         video.setTime(video.getTime() + 10);
-        
     });
 
     rewindBtn.subscribe(() => {
@@ -68,9 +69,22 @@ function Player(containerSelector) {
         video.setTime(video.getTime() - 10);
     });
 
-    playerBtn.subscribe(() => video.play(), 'enabled');
+    playerBtn.subscribe(() => {
+        video.play();
+        progressBar.updateValue(video.getTime());
+        progressBarIntervalID = setInterval(() => progressBar.translateValue( video.getPlaybackRate() ),1000)
+    }, 'enabled');
 
-    playerBtn.subscribe(() => video.pause(), 'disabled');
+    playerBtn.subscribe(() => {
+        video.pause();
+        clearInterval(progressBarIntervalID);
+    }, 'disabled');
+
+    video.subscribeEnded(() => {
+        video.pause();
+        clearInterval(progressBarIntervalID);
+        playerBtn.setState('disabled');
+    })
 
     window.addEventListener('resize', () => {
         progressBar.updateWidth();
@@ -156,9 +170,9 @@ function ToggleUI(selector, classOnActive) {
 
         state = newState;
         if(state === 'disabled'){
-            button.remove(classOnActive);
+            button.classList.remove(classOnActive);
         } else {
-            button.add(classOnActive);
+            button.classList.add(classOnActive);
         }
     }
 }
@@ -367,13 +381,26 @@ function SliderUI(selector) {
 }
 
 function Video(selector) {
+    let subscribers = [];
     let vid = document.querySelector(selector);
+
+    vid.addEventListener('ended', (event) => {
+        for(let subscriber of subscribers){
+            subscriber(event);
+        }
+      });
+
     return { 
         getInfo, 
         setTime, setVolume, setPlaybackRate,
-        getTime,
+        getTime, getPlaybackRate,
+        subscribeEnded,
         play, pause
     };
+
+    function subscribeEnded(observer){
+        subscribers.push(observer);
+    }
 
     function getInfo(){
         return new Promise(function(resolve, reject) {
@@ -417,6 +444,10 @@ function Video(selector) {
 
     function setPlaybackRate(ratio){
         vid.playbackRate = ratio;
+    }
+
+    function getPlaybackRate(){
+        return vid.playbackRate;
     }
 
     function play() {
